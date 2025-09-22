@@ -4,25 +4,28 @@ document.addEventListener('DOMContentLoaded', () => {
     const likedSongsContainer = document.getElementById('liked-songs-container');
     const profilePicLarge = document.getElementById('profile-picture-large');
     const profilePicUpload = document.getElementById('profile-pic-upload');
-    const topBarProfilePic = document.getElementById('top-bar-profile-pic');
 
     function loadProfileData() {
+        window.updateGlobalUserData();
+        profilePicLarge.src = getProfilePic();
         nameInput.value = getUsername();
-        
-        const picUrl = getProfilePic();
-        profilePicLarge.src = picUrl;
-        if(topBarProfilePic) topBarProfilePic.src = picUrl;
 
-        const likedIds = getLikedSongs();
-        likedSongsCount.textContent = likedIds.length;
+        const likedSongs = getLikedSongs();
+        likedSongsCount.textContent = likedSongs.length;
         
         likedSongsContainer.innerHTML = '';
+        if (likedSongs.length === 0) {
+            likedSongsContainer.innerHTML = '<p class="empty-list-message">Curta uma música para vê-la aqui.</p>';
+            return;
+        }
 
-        likedIds.forEach((songId, index) => {
-            const song = songDatabase.find(s => s.id === songId);
+        likedSongs.forEach((likedSong, index) => {
+            const song = songDatabase.find(s => s.id === likedSong.id);
             if (song) {
                 const songRow = document.createElement('div');
                 songRow.classList.add('song-list-row');
+                songRow.setAttribute('data-song-id', song.id);
+                
                 songRow.innerHTML = `
                     <span class="song-col-num">${index + 1}</span>
                     <div class="song-col-title">
@@ -33,6 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                     </div>
                     <span class="song-col-album">${song.album}</span>
+                    <span class="song-col-date">${likedSong.dateAdded}</span>
                     <span class="song-col-duration">${song.duration || 'N/A'}</span>
                 `;
                 likedSongsContainer.appendChild(songRow);
@@ -44,24 +48,23 @@ document.addEventListener('DOMContentLoaded', () => {
         const newName = nameInput.value.trim();
         if (newName) {
             saveUsername(newName);
-            document.getElementById('top-bar-username').textContent = newName; 
+            window.updateGlobalUserData();
         } else {
             nameInput.value = getUsername();
         }
     });
     
-    // Event listener para quando uma nova foto é escolhida
     profilePicUpload.addEventListener('change', (event) => {
         const file = event.target.files[0];
         if (file) {
             const reader = new FileReader();
             reader.onload = (e) => {
                 const newPicUrl = e.target.result;
-                saveProfilePic(newPicUrl); // Salva a foto no localStorage
-                profilePicLarge.src = newPicUrl; // Atualiza a foto grande
-                if(topBarProfilePic) topBarProfilePic.src = newPicUrl; // Atualiza a foto pequena
+                saveProfilePic(newPicUrl);
+                profilePicLarge.src = newPicUrl;
+                window.updateGlobalUserData();
             };
-            reader.readAsDataURL(file); // Converte a imagem para um URL
+            reader.readAsDataURL(file);
         }
     });
 

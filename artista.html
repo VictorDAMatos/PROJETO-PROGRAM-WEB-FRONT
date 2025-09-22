@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SONORA - Perfil</title>
+    <title>SONORA - Artista</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -16,6 +16,8 @@
                 <h2 class="playlist-title">PLAYLISTS</h2>
                 <ul>
                     <li><a href="#">Rock</a></li>
+                    <li><a href="#">Jazz</a></li>
+                    <li><a href="#">As Antigas</a></li>
                 </ul>
             </nav>
             <div class="create-playlist"><a href="#">+</a></div>
@@ -44,40 +46,30 @@
                 </div>
             </header>
 
-            <main class="main-content">
-                <header class="profile-header-vertical">
-                    <div class="profile-picture-container">
-                         <img id="profile-picture-large" src="assets/images/profile.jpg" alt="Foto de Perfil Grande" class="profile-picture-large">
-                         <label for="profile-pic-upload" class="edit-icon" title="Mudar foto de perfil">
-                             <i class="fas fa-pencil-alt"></i>
-                         </label>
-                         <input type="file" id="profile-pic-upload" accept="image/*" style="display: none;">
+            <main class="main-content" id="artist-page-content">
+                <header id="artist-header" class="artist-header">
+                    <div class="artist-header-info">
+                        <h1 id="artist-name">Carregando...</h1>
+                        <button class="play-btn-large">PLAY</button>
                     </div>
-                    <input type="text" id="profile-name-input" class="profile-name-editable" value="Frey">
                 </header>
 
-                <div class="profile-stats-detailed">
-                    <div class="stat-item"><span>Playlists</span><p>15</p></div>
-                    <div class="stat-item"><span>Seguidores</span><p>32</p></div>
-                    <div class="stat-item"><span>Músicas Curtidas</span><p id="liked-songs-count">0</p></div>
-                </div>
-
                 <section class="music-section">
-                    <div class="liked-songs-list">
-                        <div class="song-list-header">
-                            <span class="song-col-num">#</span>
-                            <span class="song-col-title">TÍTULO</span>
-                            <span class="song-col-album">ÁLBUM</span>
-                            <span class="song-col-duration"><i class="far fa-clock"></i></span>
+                    <h2 class="section-title">Discografia</h2>
+                    <div class="discography-grid" id="discography-container">
                         </div>
-                        <div id="liked-songs-container"></div>
-                    </div>
+                </section>
+                
+                <section class="music-section">
+                    <h2 class="section-title">Mais Ouvidas</h2>
+                    <div class="liked-songs-list" id="most-played-container">
+                        </div>
                 </section>
             </main>
         </div>
 
         <footer class="player-bar">
-             <audio id="audio-player"></audio>
+            <audio id="audio-player"></audio>
             <div class="song-info">
                 <img id="player-cover" src="assets/images/covers/placeholder.jpg" alt="Capa">
                 <div class="song-details">
@@ -110,6 +102,6 @@
     
     <script src="data.js"></script>
     <script src="player.js"></script>
-    <script src="perfil.js"></script>
+    <script src="artista.js"></script>
 </body>
 </html>

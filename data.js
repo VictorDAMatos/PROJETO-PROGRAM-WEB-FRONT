@@ -47,28 +47,46 @@ const songDatabase = [
         album: "Meliora (Deluxe Edition)",
         cover: "assets/images/covers/Meliora (Deluxe Edition).jpg",
         audio: "assets/audio/Square Hammer.mp3"
-    },
-    
+    }
 ];
+    
+const artistDatabase = {
+    "STARSET": {
+        banner: "assets/images/banners/STARSET.jpg"
+    },
+    "Ghost": {
+        banner: "assets/images/banners/Ghost.png"
+    },
+    "Casey Edwards": {
+        banner: "assets/images/banners/Casey Edwards.png"
+    },
+    "Santiano": {
+        banner: "assets/images/banners/Santiano.jpg"
+    }
+};
 
-// USER
-function getUsername() {
-    return localStorage.getItem('sonora_username') || "Frey";
+// contagem de vezes que a música tocou
+function getPlayCounts() {
+    const counts = localStorage.getItem('sonora_play_counts');
+    return counts ? JSON.parse(counts) : {};
 }
-function saveUsername(newName) {
-    localStorage.setItem('sonora_username', newName);
+function savePlayCounts(counts) {
+    localStorage.setItem('sonora_play_counts', JSON.stringify(counts));
+}
+function incrementPlayCount(songId) {
+    const counts = getPlayCounts();
+    counts[songId] = (counts[songId] || 0) + 1;
+    savePlayCounts(counts);
 }
 
-// PFP
+// user
+function getUsername() { return localStorage.getItem('sonora_username') || "Frey"; }
+function saveUsername(newName) { localStorage.setItem('sonora_username', newName); }
 const DEFAULT_PROFILE_PIC = "assets/images/profile.jpg";
-function getProfilePic() {
-    return localStorage.getItem('sonora_profile_pic') || DEFAULT_PROFILE_PIC;
-}
-function saveProfilePic(newPicUrl) {
-    localStorage.setItem('sonora_profile_pic', newPicUrl);
-}
+function getProfilePic() { return localStorage.getItem('sonora_profile_pic') || DEFAULT_PROFILE_PIC; }
+function saveProfilePic(newPicUrl) { localStorage.setItem('sonora_profile_pic', newPicUrl); }
 
-// FAVORITAS
+// Favoritos
 function getLikedSongs() {
     const liked = localStorage.getItem('sonora_liked_songs');
     return liked ? JSON.parse(liked) : [];
@@ -77,32 +95,43 @@ function saveLikedSongs(likedList) {
     localStorage.setItem('sonora_liked_songs', JSON.stringify(likedList));
 }
 function isSongLiked(songId) {
-    return getLikedSongs().includes(songId);
+    const likedSongs = getLikedSongs();
+    return likedSongs.some(song => song.id === songId);
 }
 function toggleLike(songId) {
     let likedSongs = getLikedSongs();
-    if (isSongLiked(songId)) {
-        likedSongs = likedSongs.filter(id => id !== songId);
+    const songIndex = likedSongs.findIndex(song => song.id === songId);
+    
+    if (songIndex > -1) {
+        likedSongs.splice(songIndex, 1);
     } else {
-        likedSongs.push(songId);
+        const today = new Date();
+        const dateAdded = today.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' }).replace('.', '');
+        likedSongs.unshift({ id: songId, dateAdded: dateAdded });
     }
     saveLikedSongs(likedSongs);
 }
 
-// RECENTES
+// Contagem de reproduções
+function getPlayCounts() {
+    const counts = localStorage.getItem('sonora_play_counts');
+    return counts ? JSON.parse(counts) : {};
+}
+function savePlayCounts(counts) { localStorage.setItem('sonora_play_counts', JSON.stringify(counts)); }
+function incrementPlayCount(songId) {
+    const counts = getPlayCounts();
+    counts[songId] = (counts[songId] || 0) + 1;
+    savePlayCounts(counts);
+}
 function getRecentSongs() {
-    const recent = localStorage.getItem('sonora_recent_songs');
-    return recent ? JSON.parse(recent) : [];
+    const recents = localStorage.getItem('sonora_recent_songs');
+    return recents ? JSON.parse(recents) : [];
 }
-function saveRecentSongs(recentList) {
-    localStorage.setItem('sonora_recent_songs', JSON.stringify(recentList));
-}
+function saveRecentSongs(recentsList) { localStorage.setItem('sonora_recent_songs', JSON.stringify(recentsList)); }
 function addSongToRecents(songId) {
-    let recentSongs = getRecentSongs();
-    recentSongs = recentSongs.filter(id => id !== songId);
-    recentSongs.unshift(songId);
-    if (recentSongs.length > 10) {
-        recentSongs = recentSongs.slice(0, 10);
-    }
-    saveRecentSongs(recentSongs);
+    let recents = getRecentSongs();
+    recents = recents.filter(id => id !== songId);
+    recents.unshift(songId);
+    if (recents.length > 20) recents.pop();
+    saveRecentSongs(recents);
 }

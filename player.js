@@ -1,8 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
     let currentSongIndex = 0;
     let isPlaying = false;
+    let isMuted = false;
+    let lastVolume = 1;
 
-    // Elementos do DOM
+    // --- Elementos do DOM ---
     const audioPlayer = document.getElementById('audio-player');
     const playPauseBtn = document.getElementById('play-pause-btn');
     const prevBtn = document.getElementById('prev-btn');
@@ -15,10 +17,66 @@ document.addEventListener('DOMContentLoaded', () => {
     const currentTimeSpan = document.getElementById('current-time');
     const durationSpan = document.getElementById('duration');
     const volumeSlider = document.getElementById('volume-slider');
+    const volumeIcon = document.getElementById('volume-icon');
     const foryouGrid = document.getElementById('foryou-grid');
-    const recentesGrid = document.getElementById('recentes-grid'); // NOVO
+    const recentesGrid = document.getElementById('recentes-grid');
     const likeBtn = document.getElementById('like-btn');
 
+    // --- FUNÇÃO MESTRE GLOBAL PARA ATUALIZAR DADOS DO UTILIZADOR ---
+     window.updateGlobalUserData = () => {
+        const topBarUsername = document.getElementById('top-bar-username');
+        const topBarProfilePic = document.getElementById('top-bar-profile-pic');
+        if (topBarUsername) topBarUsername.textContent = getUsername();
+        if (topBarProfilePic) topBarProfilePic.src = getProfilePic();
+    };
+
+    // --- OUVINTE GLOBAL PARA SINCRONIZAR ABAS ---
+    // Este código avisa as outras abas quando a foto ou o nome mudam
+        window.addEventListener('storage', (event) => {
+        if (event.key === 'sonora_profile_pic' || event.key === 'sonora_username') {
+            window.updateGlobalUserData();
+        }
+    });
+
+    window.playSongById = (songId) => {
+        const songIndex = songDatabase.findIndex(s => s.id === songId);
+        if (songIndex !== -1) {
+            currentSongIndex = songIndex;
+            loadSong(songDatabase[currentSongIndex]);
+            playSong();
+        }
+    };
+    
+    document.addEventListener('click', (event) => {
+        const songRow = event.target.closest('.song-list-row');
+        if (songRow) {
+            const songId = songRow.getAttribute('data-song-id');
+            if (songId) playSongById(songId);
+        }
+    });
+
+    // --- FUNÇÃO GLOBAL PARA TOCAR MÚSICAS DAS LISTAS ---
+    window.playSongById = (songId) => {
+        const songIndex = songDatabase.findIndex(s => s.id === songId);
+        if (songIndex !== -1) {
+            currentSongIndex = songIndex;
+            loadSong(songDatabase[currentSongIndex]);
+            playSong();
+        }
+    };
+    
+    // Listener de clique para as listas de músicas em qualquer página
+    document.addEventListener('click', (event) => {
+        const songRow = event.target.closest('.song-list-row');
+        if (songRow) {
+            const songId = songRow.getAttribute('data-song-id');
+            if (songId) {
+                playSongById(songId);
+            }
+        }
+    });
+
+    // --- Funções ---
     function updateSliderFill(slider) {
         const percentage = (slider.value - slider.min) / (slider.max - slider.min) * 100;
         const tealColor = getComputedStyle(document.documentElement).getPropertyValue('--cor-primaria-teal');
@@ -27,6 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateLikeButtonState() {
+        if (!likeBtn) return;
         const currentSong = songDatabase[currentSongIndex];
         if (isSongLiked(currentSong.id)) {
             likeBtn.classList.add('liked');
@@ -41,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (song) {
             audioPlayer.src = song.audio;
             playerTitle.textContent = song.title;
-            playerArtist.textContent = song.artist;
+            playerArtist.innerHTML = `<a href="artista.html?nome=${encodeURIComponent(song.artist)}">${song.artist}</a>`;
             playerAlbum.textContent = song.album;
             playerCover.src = song.cover;
             updateLikeButtonState();
@@ -52,16 +111,33 @@ document.addEventListener('DOMContentLoaded', () => {
         isPlaying = true;
         playPauseBtn.querySelector('i').classList.replace('fa-play', 'fa-pause');
         audioPlayer.play();
-        // Adiciona a música aos recentes quando ela começa a tocar
-        addSongToRecents(songDatabase[currentSongIndex].id);
-        // Atualiza a secção de recentes na interface
-        renderRecentSongs();
+        const currentSong = songDatabase[currentSongIndex];
+        incrementPlayCount(currentSong.id);
+        addSongToRecents(currentSong.id);
+        if (document.getElementById('recentes-grid')) {
+             renderRecentSongs();
+        }
     }
 
     function pauseSong() {
         isPlaying = false;
         playPauseBtn.querySelector('i').classList.replace('fa-pause', 'fa-play');
         audioPlayer.pause();
+    }
+
+    function toggleMute() {
+        isMuted = !isMuted;
+        if (isMuted) {
+            lastVolume = audioPlayer.volume;
+            audioPlayer.volume = 0;
+            volumeIcon.classList.replace('fa-volume-up', 'fa-volume-xmark');
+            volumeSlider.value = 0;
+        } else {
+            audioPlayer.volume = lastVolume;
+            volumeIcon.classList.replace('fa-volume-xmark', 'fa-volume-up');
+            volumeSlider.value = lastVolume * 100;
+        }
+        updateSliderFill(volumeSlider);
     }
 
     function nextSong() {
@@ -78,8 +154,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     function updateProgress() {
         if (audioPlayer.duration) {
-            const progressValue = (audioPlayer.currentTime / audioPlayer.duration) * 100;
-            progressBar.value = progressValue;
+            progressBar.value = (audioPlayer.currentTime / audioPlayer.duration) * 100;
             updateSliderFill(progressBar);
         }
         currentTimeSpan.textContent = formatTime(audioPlayer.currentTime);
@@ -92,79 +167,72 @@ document.addEventListener('DOMContentLoaded', () => {
         return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
     }
 
-    // Função para desenhar os cards na secção "Feito Para Você"
-    function renderForYouCards() {
-        if (!foryouGrid) return;
-        foryouGrid.innerHTML = '';
-        songDatabase.forEach((song, index) => {
+    function renderCards(container, songs) {
+        if (!container) return;
+        container.innerHTML = '';
+        songs.forEach(song => {
             const card = document.createElement('div');
             card.classList.add('card');
-            card.innerHTML = `<img src="${song.cover}" alt="${song.title}"><h4>${song.title}</h4><p>${song.artist}</p>`;
-            card.addEventListener('click', () => {
-                currentSongIndex = index;
-                loadSong(songDatabase[currentSongIndex]);
-                playSong();
+            card.innerHTML = `<img src="${song.cover}" alt="${song.title}"><h4>${song.title}</h4><p><a href="artista.html?nome=${encodeURIComponent(song.artist)}">${song.artist}</a></p>`;
+            card.addEventListener('click', (e) => {
+                if (e.target.tagName === 'A') return;
+                playSongById(song.id);
             });
-            foryouGrid.appendChild(card);
+            container.appendChild(card);
         });
     }
     
-    // NOVA FUNÇÃO para desenhar os cards na secção "Recentes"
     function renderRecentSongs() {
-        if (!recentesGrid) return;
-        recentesGrid.innerHTML = '';
         const recentSongIds = getRecentSongs();
-        
-        recentSongIds.forEach(songId => {
-            const song = songDatabase.find(s => s.id === songId);
-            if (song) {
-                const card = document.createElement('div');
-                card.classList.add('card');
-                card.innerHTML = `<img src="${song.cover}" alt="${song.title}"><h4>${song.title}</h4><p>${song.artist}</p>`;
-                card.addEventListener('click', () => {
-                    currentSongIndex = songDatabase.findIndex(s => s.id === song.id);
-                    loadSong(song);
-                    playSong();
-                });
-                recentesGrid.appendChild(card);
+        const recentSongs = recentSongIds.map(id => songDatabase.find(s => s.id === id)).filter(Boolean);
+        renderCards(recentesGrid, recentSongs);
+    }
+    
+    if (playPauseBtn) {
+        playPauseBtn.addEventListener('click', () => isPlaying ? pauseSong() : playSong());
+        nextBtn.addEventListener('click', nextSong);
+        prevBtn.addEventListener('click', prevSong);
+        likeBtn.addEventListener('click', () => {
+            const currentSong = songDatabase[currentSongIndex];
+            toggleLike(currentSong.id);
+            updateLikeButtonState();
+        });
+        volumeIcon.addEventListener('click', toggleMute);
+        audioPlayer.addEventListener('timeupdate', updateProgress);
+        audioPlayer.addEventListener('ended', nextSong);
+        audioPlayer.addEventListener('loadedmetadata', () => {
+            durationSpan.textContent = formatTime(audioPlayer.duration);
+        });
+        progressBar.addEventListener('input', () => {
+            if(audioPlayer.duration) {
+                audioPlayer.currentTime = (progressBar.value / 100) * audioPlayer.duration;
+                updateSliderFill(progressBar);
             }
         });
+        volumeSlider.addEventListener('input', (e) => {
+            const volumeValue = e.target.value / 100;
+            audioPlayer.volume = volumeValue;
+            lastVolume = volumeValue;
+            if (volumeValue === 0) {
+                isMuted = true;
+                volumeIcon.classList.replace('fa-volume-up', 'fa-volume-xmark');
+            } else {
+                isMuted = false;
+                volumeIcon.classList.replace('fa-volume-xmark', 'fa-volume-up');
+            }
+            updateSliderFill(e.target);
+        });
     }
-
-    // Event Listeners
-    playPauseBtn.addEventListener('click', () => isPlaying ? pauseSong() : playSong());
-    nextBtn.addEventListener('click', nextSong);
-    prevBtn.addEventListener('click', prevSong);
-    likeBtn.addEventListener('click', () => {
-        const currentSong = songDatabase[currentSongIndex];
-        toggleLike(currentSong.id);
-        updateLikeButtonState();
-    });
-
-    audioPlayer.addEventListener('timeupdate', updateProgress);
-    audioPlayer.addEventListener('ended', nextSong);
-    audioPlayer.addEventListener('loadedmetadata', () => {
-        durationSpan.textContent = formatTime(audioPlayer.duration);
-    });
-
-    progressBar.addEventListener('input', () => {
-        if(audioPlayer.duration) {
-            audioPlayer.currentTime = (progressBar.value / 100) * audioPlayer.duration;
-            updateSliderFill(progressBar);
-        }
-    });
-
-    volumeSlider.addEventListener('input', (e) => {
-        audioPlayer.volume = e.target.value / 100;
-        updateSliderFill(e.target);
-    });
-
-    // Inicialização
-    renderForYouCards();
-    renderRecentSongs(); // Carrega os recentes ao iniciar a página
-    loadSong(songDatabase[currentSongIndex]);
-    audioPlayer.volume = volumeSlider.value / 100;
     
-    updateSliderFill(progressBar);
-    updateSliderFill(volumeSlider);
+    // --- Inicialização ---
+    window.updateGlobalUserData();
+    if(foryouGrid) renderCards(foryouGrid, songDatabase);
+    if(recentesGrid) renderRecentSongs();
+    if(playPauseBtn) {
+        loadSong(songDatabase[currentSongIndex]);
+        audioPlayer.volume = volumeSlider.value / 100;
+        lastVolume = audioPlayer.volume;
+        updateSliderFill(progressBar);
+        updateSliderFill(volumeSlider);
+    }
 });

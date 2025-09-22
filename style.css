@@ -305,3 +305,150 @@ ul { list-style: none; }
 .title-details p { font-size: 0.8rem; color: var(--cor-texto-secundario); }
 .song-col-album { color: var(--cor-texto-secundario); }
 .song-col-duration { text-align: right; color: var(--cor-texto-secundario); }
+
+.profile-picture-container {
+    position: relative;
+    cursor: pointer;
+}
+
+.edit-icon {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.profile-picture-container:hover .edit-icon {
+    opacity: 1;
+}
+
+/* Artista */
+
+
+.artist-header {
+    width: 100%;
+    height: 300px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 30px;
+    position: relative;
+}
+.artist-header::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+    border-radius: 10px;
+}
+.artist-header-info {
+    position: relative;
+    z-index: 2;
+}
+.artist-header-info h1 {
+    font-size: 5rem;
+    font-weight: 700;
+    color: white;
+    text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+}
+.play-btn-large {
+    background-color: var(--cor-primaria-teal);
+    color: white;
+    border: none;
+    padding: 15px 40px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 30px;
+    cursor: pointer;
+    margin-top: 15px;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+.play-btn-large:hover {
+    transform: scale(1.05);
+    background-color: #009a9a;
+}
+
+.discography-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 20px;
+}
+
+#artist-page-content {
+    height: 100%; /* Garante que a div tenha altura */
+    overflow-y: auto; /* Adiciona scroll apenas ao conteúdo principal da página */
+}
+
+/* Favoritos */
+
+.page-header {
+    width: 100%;
+    height: 300px;
+    background: linear-gradient(135deg, #2a0a2f, var(--cor-primaria-teal));
+    border-radius: 10px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: flex-end;
+    padding: 30px;
+}
+.page-header-icon {
+    width: 120px;
+    height: 120px;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    margin-right: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+.page-header-icon i {
+    font-size: 4rem;
+    color: var(--cor-primaria-teal);
+}
+.page-header-info p {
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+.page-header-info h1 {
+    font-size: 5rem;
+    font-weight: 700;
+}
+.page-actions {
+    margin-bottom: 40px;
+}
+.empty-list-message {
+    color: var(--cor-texto-secundario);
+    padding: 20px;
+}
+
+/* Ajustes na lista de músicas para a nova coluna de data */
+.song-list-header, .song-list-row {
+    grid-template-columns: 50px 2fr 1.5fr 1fr 100px; /* Adiciona a nova coluna */
+}
+.song-col-date {
+    color: var(--cor-texto-secundario);
+    font-size: 0.9rem;
+}
+.empty-list-message {
+    color: var(--cor-texto-secundario);
+    padding: 20px;
+    text-align: center;
+}

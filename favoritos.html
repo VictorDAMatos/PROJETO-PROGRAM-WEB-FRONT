@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SONORA - Perfil</title>
+    <title>SONORA - Músicas Curtidas</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -45,21 +45,18 @@
             </header>
 
             <main class="main-content">
-                <header class="profile-header-vertical">
-                    <div class="profile-picture-container">
-                         <img id="profile-picture-large" src="assets/images/profile.jpg" alt="Foto de Perfil Grande" class="profile-picture-large">
-                         <label for="profile-pic-upload" class="edit-icon" title="Mudar foto de perfil">
-                             <i class="fas fa-pencil-alt"></i>
-                         </label>
-                         <input type="file" id="profile-pic-upload" accept="image/*" style="display: none;">
+                <header class="page-header">
+                    <div class="page-header-icon">
+                        <i class="fas fa-heart"></i>
                     </div>
-                    <input type="text" id="profile-name-input" class="profile-name-editable" value="Frey">
+                    <div class="page-header-info">
+                        <p>PLAYLIST</p>
+                        <h1>Músicas Curtidas</h1>
+                    </div>
                 </header>
 
-                <div class="profile-stats-detailed">
-                    <div class="stat-item"><span>Playlists</span><p>15</p></div>
-                    <div class="stat-item"><span>Seguidores</span><p>32</p></div>
-                    <div class="stat-item"><span>Músicas Curtidas</span><p id="liked-songs-count">0</p></div>
+                <div class="page-actions">
+                    <button id="play-favorites-btn" class="play-btn-large">PLAY</button>
                 </div>
 
                 <section class="music-section">
@@ -68,6 +65,7 @@
                             <span class="song-col-num">#</span>
                             <span class="song-col-title">TÍTULO</span>
                             <span class="song-col-album">ÁLBUM</span>
+                            <span class="song-col-date">DATA DE ADIÇÃO</span>
                             <span class="song-col-duration"><i class="far fa-clock"></i></span>
                         </div>
                         <div id="liked-songs-container"></div>
@@ -110,6 +108,6 @@
     
     <script src="data.js"></script>
     <script src="player.js"></script>
-    <script src="perfil.js"></script>
+    <script src="favoritos.js"></script>
 </body>
 </html>
