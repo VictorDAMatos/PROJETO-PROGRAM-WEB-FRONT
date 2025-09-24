@@ -184,3 +184,45 @@ function deletePlaylist(playlistId) {
     playlists = playlists.filter(p => p.id !== playlistId);
     savePlaylists(playlists);
 }
+
+function getFollowedArtists() {
+    const followed = localStorage.getItem('sonora_followed_artists');
+    // Se não houver artistas seguidos, seguimos alguns por padrão para demonstração.
+    if (!followed) {
+        const defaultFollowed = ["STARSET", "Ghost", "Casey Edwards"];
+        localStorage.setItem('sonora_followed_artists', JSON.stringify(defaultFollowed));
+        return defaultFollowed;
+    }
+    return JSON.parse(followed);
+}
+
+/**
+ * Encontra a música mais recente de um artista no banco de dados.
+ * "Mais recente" é definida como a última entrada do artista na songDatabase.
+* @param {string} artistName - O nome do artista.
+ * @returns {object|null} - Um objeto com o nome do álbum e a lista de músicas, ou null.
+ */
+function getLatestAlbumForArtist(artistName) {
+    // 1. Encontra a última música registrada do artista para descobrir o nome do último álbum
+    const latestSong = songDatabase.slice().reverse().find(song => song.artist === artistName);
+
+    if (!latestSong) {
+        return null; // Artista não tem músicas na base de dados
+    }
+
+    const latestAlbumName = latestSong.album;
+
+    // 2. Filtra TODAS as músicas que pertencem a esse artista e a esse álbum
+    const albumSongs = songDatabase.filter(song => 
+        song.artist === artistName && song.album === latestAlbumName
+    );
+
+    if (albumSongs.length > 0) {
+        return {
+            albumName: latestAlbumName,
+            songs: albumSongs
+        };
+    }
+
+    return null;
+}

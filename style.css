@@ -133,7 +133,10 @@ ul { list-style: none; }
     transition: background-color 0.3s ease;
 }
 .card:hover { background-color: #333333; }
-.card img { width: 100%; border-radius: 8px; margin-bottom: 15px; }
+.card img {
+    width: 100%;
+    border-radius: 8px;
+}
 .card h4 { font-size: 1rem; margin-bottom: 5px; font-weight: 500; }
 .card p { font-size: 0.9rem; color: var(--cor-texto-secundario); }
 
@@ -624,4 +627,52 @@ ul { list-style: none; }
     font-size: 0.9rem;
     font-weight: 600;
     color: white; /* Cor do texto destacada em branco */
+}
+
+/*seguindo*/
+.artist-release-section {
+    margin-bottom: 50px; /* Adiciona um espaço grande entre um artista e outro */
+}
+
+.section-title {
+    font-size: 1.8rem; /* Fonte maior para o título */
+    font-weight: 700;
+    color: var(--cor-texto-principal);
+    margin-bottom: 25px; /* Espaço entre o título e a grade de músicas */
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--cor-borda); /* Linha divisória*/
+}
+
+/* Destaque para o nome do álbum no título */
+.section-title .album-highlight {
+    color: var(--cor-primaria-teal); /* Usa a cor de destaque do site */
+    font-weight: 600;
+}
+.card .card-image-container {
+    position: relative;
+    /* Esta margem substitui a margem que estava na tag <img> */
+    margin-bottom: 15px; 
+}
+
+/* 2. A imagem dentro do novo container */
+.card .card-image-container img {
+    width: 100%;
+    border-radius: 8px;
+    display: block; /* Evita espaços indesejados */
+}
+
+/* 3. O estilo do selo "Lançamento" */
+.card-badge {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background-color: var(--cor-primaria-teal);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    z-index: 2; /* Garante que o selo fique sobre a imagem */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3); /* Sombra sutil para destacar */
 }
