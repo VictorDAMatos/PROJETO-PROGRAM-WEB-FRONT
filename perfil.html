@@ -14,11 +14,9 @@
             <h1 class="sidebar-logo">SONORA</h1>
             <nav class="playlist-nav">
                 <h2 class="playlist-title">PLAYLISTS</h2>
-                <ul>
-                    <li><a href="#">Rock</a></li>
-                </ul>
+                <ul id="sidebar-playlists-list"></ul>
             </nav>
-            <div class="create-playlist"><a href="#">+</a></div>
+            <div class="create-playlist"><a href="criar_playlist.html">+</a></div>
         </aside>
 
         <div class="main-view">
@@ -29,59 +27,46 @@
                         <span id="top-bar-username">Frey</span>
                     </a>
                 </div>
-                <div class="top-bar-center">
-                    <div class="search-bar">
-                        <i class="fas fa-search"></i>
-                        <input type="text" placeholder="O que deseja ouvir?">
-                    </div>
-                </div>
+                <div class="top-bar-center"></div>
                 <div class="top-bar-right">
-                    <div class="top-bar-nav">
-                        <a href="seguidos.html" class="nav-icon" title="Seguidos"><i class="fas fa-play"></i></a>
-                        <a href="favoritos.html" class="nav-icon" title="Favoritos"><i class="fas fa-heart"></i></a>
-                        <a href="index.html" class="nav-icon" title="Início"><i class="fas fa-home"></i></a>
-                    </div>
+                    <a href="index.html" class="nav-icon" title="Início"><i class="fas fa-home"></i></a>
+                    <a href="favoritos.html" class="nav-icon" title="Favoritos"><i class="fas fa-heart"></i></a>
+                    <a href="#" class="nav-icon" title="Player"><i class="fas fa-play"></i></a>
                 </div>
             </header>
 
             <main class="main-content">
                 <header class="profile-header-vertical">
-                    <div class="profile-picture-container">
-                         <img id="profile-picture-large" src="assets/images/profile.jpg" alt="Foto de Perfil Grande" class="profile-picture-large">
-                         <label for="profile-pic-upload" class="edit-icon" title="Mudar foto de perfil">
-                             <i class="fas fa-pencil-alt"></i>
-                         </label>
-                         <input type="file" id="profile-pic-upload" accept="image/*" style="display: none;">
-                    </div>
+                    <label for="profile-pic-upload" class="profile-picture-container">
+                        <img id="profile-picture-large" src="assets/images/profile.jpg" alt="Foto de Perfil Grande" class="profile-picture-large">
+                        <div class="edit-icon"><i class="fas fa-pencil-alt"></i></div>
+                        <input type="file" id="profile-pic-upload" accept="image/*" style="display: none;">
+                    </label>
                     <input type="text" id="profile-name-input" class="profile-name-editable" value="Frey">
                 </header>
-
                 <div class="profile-stats-detailed">
-                    <div class="stat-item"><span>Playlists</span><p>15</p></div>
-                    <div class="stat-item"><span>Seguidores</span><p>32</p></div>
-                    <div class="stat-item"><span>Músicas Curtidas</span><p id="liked-songs-count">0</p></div>
-                </div>
-
-                <section class="music-section">
-                    <div class="liked-songs-list">
-                        <div class="song-list-header">
-                            <span class="song-col-num">#</span>
-                            <span class="song-col-title">TÍTULO</span>
-                            <span class="song-col-album">ÁLBUM</span>
-                            <span class="song-col-duration"><i class="far fa-clock"></i></span>
-                        </div>
-                        <div id="liked-songs-container"></div>
+                    <div class="stat-item">
+                        <p id="playlists-count">0</p>
+                        <span>Playlists</span>
                     </div>
-                </section>
+                    <div class="stat-item">
+                        <p id="followers-count">0</p>
+                        <span>Seguidores</span>
+                    </div>
+                    <div class="stat-item">
+                        <p id="liked-songs-count">0</p>
+                        <span>Músicas Curtidas</span>
+                    </div>
+                </div>
+                <section class="liked-songs-list" id="liked-songs-container"></section>
             </main>
         </div>
 
         <footer class="player-bar">
-             <audio id="audio-player"></audio>
             <div class="song-info">
-                <img id="player-cover" src="assets/images/covers/placeholder.jpg" alt="Capa">
+                <img id="player-cover" src="assets/images/covers/placeholder_song.png" alt="Capa do Álbum">
                 <div class="song-details">
-                    <h3 id="player-title">Selecione uma música</h3>
+                    <h3 id="player-title">Nome da Música</h3>
                     <p><span id="player-artist">Artista</span> • <span id="player-album">Álbum</span></p>
                 </div>
             </div>
@@ -108,6 +93,7 @@
         </footer>
     </div>
     
+    <audio id="audio-player"></audio>
     <script src="data.js"></script>
     <script src="player.js"></script>
     <script src="perfil.js"></script>

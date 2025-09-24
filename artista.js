@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const artistNameEl = document.getElementById('artist-name');
     const discographyContainer = document.getElementById('discography-container');
     const mostPlayedContainer = document.getElementById('most-played-container');
-    const playArtistBtn = document.querySelector('.play-btn-large');
 
     const urlParams = new URLSearchParams(window.location.search);
     const artistName = decodeURIComponent(urlParams.get('nome'));
@@ -21,7 +20,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const albumSong = artistSongs.find(s => s.album === albumName);
             const card = document.createElement('div');
             card.classList.add('card');
-            card.innerHTML = `<img src="${albumSong.cover}" alt="${albumName}"><h4>${albumName}</h4><p>Álbum</p>`;
+            card.innerHTML = `
+                <img src="${albumSong.cover}" alt="${albumName}">
+                <h4>${albumName}</h4>
+                <p>Álbum</p> 
+            `;
             discographyContainer.appendChild(card);
         });
         
@@ -34,26 +37,20 @@ document.addEventListener('DOMContentLoaded', () => {
         sortedSongs.forEach((song, index) => {
             const songRow = document.createElement('div');
             songRow.classList.add('song-list-row');
-            songRow.setAttribute('data-song-id', song.id);
-            
             songRow.innerHTML = `
                 <span class="song-col-num">${index + 1}</span>
                 <div class="song-col-title">
                     <img src="${song.cover}" alt="${song.album}">
-                    <div class="title-details"><h4>${song.title}</h4><p>${song.artist}</p></div>
+                    <div class="title-details">
+                        <h4>${song.title}</h4>
+                        <p>${song.artist}</p>
+                    </div>
                 </div>
                 <span class="song-col-album">${song.album}</span>
                 <span class="song-col-duration">${song.duration || 'N/A'}</span>
             `;
             mostPlayedContainer.appendChild(songRow);
         });
-
-        playArtistBtn.addEventListener('click', () => {
-            if (artistSongs.length > 0) {
-                window.playSongById(artistSongs[0].id);
-            }
-        });
-
     } else {
         artistNameEl.textContent = "Artista não encontrado";
     }

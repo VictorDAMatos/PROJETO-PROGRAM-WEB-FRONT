@@ -391,10 +391,8 @@ ul { list-style: none; }
 }
 
 #artist-page-content {
-    height: 100%; /* Garante que a div tenha altura */
     overflow-y: auto; /* Adiciona scroll apenas ao conteúdo principal da página */
 }
-
 /* Favoritos */
 
 .page-header {
@@ -451,4 +449,179 @@ ul { list-style: none; }
     color: var(--cor-texto-secundario);
     padding: 20px;
     text-align: center;
+}
+
+/* playlists */
+.playlist-header-editable {
+    display: flex;
+    align-items: flex-end;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+.playlist-cover-container {
+    position: relative;
+    cursor: pointer;
+}
+.playlist-cover-large {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    box-shadow: 0 4px 30px rgba(0,0,0,0.5);
+}
+.playlist-cover-container:hover .edit-icon {
+    opacity: 1;
+}
+.playlist-info-editable p {
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+.playlist-name-editable {
+    font-family: var(--fonte-principal);
+    background: none;
+    border: none;
+    color: white;
+    font-size: 4rem;
+    font-weight: 700;
+    padding: 0;
+    margin: 10px 0;
+    width: 100%;
+}
+.playlist-name-editable:focus {
+    outline: none;
+    background-color: var(--cor-fundo-medio);
+}
+.playlist-user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.playlist-user-info img {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+}
+.playlist-user-info span {
+    font-weight: 600;
+}
+.search-bar-large {
+    background-color: var(--cor-fundo-medio);
+    border-radius: 8px;
+    padding: 12px 15px;
+    width: 100%;
+    max-width: 400px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+.search-bar-large input {
+    background: none; border: none; outline: none;
+    color: white;
+    width: 100%;
+}
+.search-result-item {
+    grid-template-columns: 2fr 100px !important;
+    padding: 8px 15px;
+}
+.search-result-item .add-btn {
+    background: none;
+    border: 1px solid var(--cor-texto-secundario);
+    color: var(--cor-texto-principal);
+    font-weight: 600;
+    padding: 8px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.search-result-item .add-btn:hover {
+    background-color: var(--cor-texto-principal);
+    color: black;
+}
+
+/* Estilos para o Menu de Contexto da Playlist */
+.playlist-context-menu {
+    position: absolute;
+    background-color: var(--cor-fundo-medio);
+    border: 1px solid var(--cor-borda);
+    border-radius: 8px;
+    padding: 5px;
+    z-index: 1000;
+    min-width: 180px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+.context-menu-item {
+    padding: 10px 15px;
+    cursor: pointer;
+    color: var(--cor-texto-secundario);
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: color 0.2s, background-color 0.2s;
+}
+
+.context-menu-item:hover {
+    background-color: #3a3a3a;
+    color: var(--cor-texto-principal);
+}
+
+/* Botão Deletar Playlist */
+.delete-playlist-btn {
+    background-color: lightgrey;
+    color: var(--cor-primaria-teal);
+    border: none;
+    border-radius: 20px;
+    padding: 8px 15px;
+    font-weight: 600;
+    font-family: var(--fonte-principal);
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+.delete-playlist-btn:hover {
+    background-color: #c8c8c8;
+}
+
+/* Ajuste no top-bar para alinhar o novo botão */
+.top-bar-right {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* Ajuste o espaçamento se necessário */
+}
+
+/* Menu de Contexto (posição ajustada) */
+.playlist-context-menu {
+    position: absolute;
+    background-color: var(--cor-fundo-medio);
+    border: 1px solid var(--cor-borda);
+    border-radius: 8px;
+    padding: 5px;
+    z-index: 1000;
+    min-width: 180px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+/* Layout da Lista de Músicas com a coluna "Adicionado em" */
+.song-list-header, .song-list-row {
+    /* # | Título | Álbum | Adicionado em | Duração */
+    grid-template-columns: 50px 3fr 2fr 1.5fr 100px;
+}
+.song-col-date {
+    color: var(--cor-texto-secundario);
+    font-size: 0.9rem;
+}
+
+
+/* Estatísticas da Playlist (Duração e Contagem) */
+.playlist-stats-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px solid var(--cor-borda);
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: white; /* Cor do texto destacada em branco */
 }
