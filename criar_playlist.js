@@ -10,12 +10,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const playlistDurationEl = document.getElementById('playlist-duration');
     const playlistSongCountEl = document.getElementById('playlist-song-count');
     const deleteBtn = document.getElementById('delete-playlist-btn');
-    
+
     let currentPlaylistId = null;
 
     function loadPlaylistPage() {
         const urlParams = new URLSearchParams(window.location.search);
-       userPic.src = getProfilePic();
+        userPic.src = getProfilePic();
         currentPlaylistId = urlParams.get('id');
 
         if (!currentPlaylistId) {
@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!playlist || playlist.songs.length === 0) {
             songsContainer.innerHTML = '<p class="empty-list-message">Adicione músicas à sua playlist.</p>';
-            playlistDurationEl.textContent = ''; 
+            playlistDurationEl.textContent = '';
             playlistSongCountEl.textContent = '0 músicas';
         } else {
             playlistDurationEl.textContent = getPlaylistTotalDuration(currentPlaylistId);
@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const songRow = document.createElement('div');
                     songRow.classList.add('song-list-row');
                     songRow.setAttribute('data-song-id', song.id);
-                    
+
                     // Link do artista restaurado
                     songRow.innerHTML = `
                         <span class="song-col-num">${index + 1}</span>
@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
     }
-    
+
     function renderSearchResults(query) {
         searchResultsContainer.innerHTML = '';
         if (query.length < 2) return;
@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const playlist = getPlaylistById(currentPlaylistId);
         const songsInPlaylist = playlist ? playlist.songs.map(s => typeof s === 'object' ? s.id : s) : [];
 
-        const results = songDatabase.filter(s => 
+        const results = songDatabase.filter(s =>
             (s.title.toLowerCase().includes(query) || s.artist.toLowerCase().includes(query))
             && !songsInPlaylist.includes(s.id)
         );
@@ -106,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
         results.forEach(song => {
             const songRow = document.createElement('div');
             songRow.classList.add('song-list-row', 'search-result-item');
-            
+
             // Link do artista restaurado
             songRow.innerHTML = `
                 <div class="song-col-title">
@@ -144,7 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
             reader.readAsDataURL(file);
         }
     });
-    
+
     searchInput.addEventListener('input', () => {
         renderSearchResults(searchInput.value.toLowerCase());
     });
@@ -156,7 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
             window.location.href = 'index.html';
         }
     });
-    
+
     loadPlaylistPage();
     window.updateGlobalUserData();
 });

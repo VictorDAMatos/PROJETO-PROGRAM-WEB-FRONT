@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
             discographyContainer.appendChild(card);
         });
-        
+
         mostPlayedContainer.innerHTML = '';
         const playCounts = getPlayCounts();
         const sortedSongs = artistSongs

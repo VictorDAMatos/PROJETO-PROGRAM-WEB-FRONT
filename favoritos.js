@@ -1,9 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
     const likedSongsContainer = document.getElementById('liked-songs-container');
     const playFavoritesBtn = document.getElementById('play-favorites-btn');
-    
+
     function renderLikedSongs() {
-        const likedSongs = getLikedSongs(); 
+        const likedSongs = getLikedSongs();
         likedSongsContainer.innerHTML = ''; // Limpa o container
 
         if (likedSongs.length === 0) {

@@ -3,6 +3,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let isPlaying = false;
     let isMuted = false;
     let lastVolume = 1;
+    let activeQueue = null;
+
 
     // --- Elementos do DOM ---
     const audioPlayer = document.getElementById('audio-player');
@@ -35,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderSidebarPlaylists() {
         const sidebarList = document.getElementById('sidebar-playlists-list');
         if (!sidebarList) return;
-        
+
         sidebarList.innerHTML = '';
         const playlists = getPlaylists();
         playlists.forEach(p => {
@@ -60,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
             playSong();
         }
     };
-    
+
     document.addEventListener('click', (event) => {
         const clickableRow = event.target.closest('.song-list-row[data-song-id], .card[data-song-id]');
         if (clickableRow) {
@@ -133,17 +135,32 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function nextSong() {
-        currentSongIndex = (currentSongIndex + 1) % songDatabase.length;
-        loadSong(songDatabase[currentSongIndex]);
-        playSong();
+        if (activeQueue) {
+
+            currentQueueIndex = (currentQueueIndex + 1) % activeQueue.length;
+            const nextSongId = activeQueue[currentQueueIndex];
+            const songData = songDatabase.find(s => s.id === nextSongId);
+            loadSong(songData);
+        } else {
+            currentSongIndex = (currentSongIndex + 1) % songDatabase.length;
+            loadSong(songDatabase[currentSongIndex]);
+        }
+        playAudio();
     }
 
     function prevSong() {
-        currentSongIndex = (currentSongIndex - 1 + songDatabase.length) % songDatabase.length;
-        loadSong(songDatabase[currentSongIndex]);
-        playSong();
+        if (activeQueue) {
+            currentQueueIndex = (currentQueueIndex - 1 + activeQueue.length) % activeQueue.length;
+            const prevSongId = activeQueue[currentQueueIndex];
+            const songData = songDatabase.find(s => s.id === prevSongId);
+            loadSong(songData);
+        } else {
+            currentSongIndex = (currentSongIndex - 1 + songDatabase.length) % songDatabase.length;
+            loadSong(songDatabase[currentSongIndex]);
+        }
+        playAudio();
     }
-    
+
     function updateProgress() {
         if (audioPlayer.duration) {
             progressBar.value = (audioPlayer.currentTime / audioPlayer.duration) * 100;
@@ -170,19 +187,19 @@ document.addEventListener('DOMContentLoaded', () => {
             container.appendChild(card);
         });
     }
-    
+
     function renderRecentSongs() {
         const recentSongIds = getRecentSongs();
         const recentSongs = recentSongIds.map(id => songDatabase.find(s => s.id === id)).filter(Boolean);
         renderCards(recentesGrid, recentSongs);
     }
-    
+
     function showPlaylistMenu(event) {
-        closePlaylistMenu(); 
+        closePlaylistMenu();
         const buttonRect = addPlaylistBtn.getBoundingClientRect();
         const menu = document.createElement('div');
         menu.className = 'playlist-context-menu';
-        
+
         const playlists = getPlaylists();
         if (playlists.length === 0) {
             menu.innerHTML = '<span class="context-menu-item">Nenhuma playlist.</span>';
@@ -198,7 +215,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 menu.appendChild(item);
             });
         }
-        
+
         document.body.appendChild(menu);
         menu.style.right = `${window.innerWidth - buttonRect.right}px`;
         menu.style.top = `${buttonRect.top - menu.offsetHeight - 10}px`;
@@ -218,7 +235,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function closePlaylistMenuOnClickOutside(event) {
         if (event.target.closest('.playlist-context-menu')) return;
         closePlaylistMenu();
-    } 
+    }
 
     if (playPauseBtn) {
         playPauseBtn.addEventListener('click', () => isPlaying ? pauseSong() : playSong());
@@ -238,7 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
             durationSpan.textContent = formatTime(audioPlayer.duration);
         });
         progressBar.addEventListener('input', () => {
-            if(audioPlayer.duration) {
+            if (audioPlayer.duration) {
                 audioPlayer.currentTime = (progressBar.value / 100) * audioPlayer.duration;
                 updateSliderFill(progressBar);
             }
@@ -253,12 +270,34 @@ document.addEventListener('DOMContentLoaded', () => {
             updateSliderFill(e.target);
         });
     }
-    
+    /**
+ * 
+ * @param {string[]} songIdArray 
+ * @param {number} [startIndex=0] 
+ */
+    window.playQueue = (songIdArray, startIndex = 0) => {
+        if (!songIdArray || songIdArray.length === 0) {
+            console.error("Tentativa de tocar uma fila vazia.");
+            return;
+        }
+
+        activeQueue = [...songIdArray];
+        currentQueueIndex = startIndex;
+
+        const songToPlayId = activeQueue[currentQueueIndex];
+        const songData = songDatabase.find(s => s.id === songToPlayId);
+
+        if (songData) {
+            loadSong(songData);
+            playAudio();
+        }
+    };
+
     // --- Inicialização ---
     window.updateGlobalUserData();
-    if(foryouGrid) renderCards(foryouGrid, songDatabase);
-    if(recentesGrid) renderRecentSongs();
-    if(playPauseBtn) {
+    if (foryouGrid) renderCards(foryouGrid, songDatabase);
+    if (recentesGrid) renderRecentSongs();
+    if (playPauseBtn) {
         if (songDatabase.length > 0) {
             loadSong(songDatabase[currentSongIndex]);
             audioPlayer.volume = volumeSlider.value / 100;

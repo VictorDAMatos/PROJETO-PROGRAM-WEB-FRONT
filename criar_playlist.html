@@ -1,17 +1,19 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SONORA - Criar Playlist</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
     <div class="app-wrapper">
         <aside class="sidebar">
-             <h1 class="sidebar-logo">SONORA</h1>
+            <h1 class="sidebar-logo">SONORA</h1>
             <nav class="playlist-nav">
                 <h2 class="playlist-title">PLAYLISTS</h2>
                 <ul id="sidebar-playlists-list"></ul>
@@ -23,30 +25,32 @@
 
         <div class="main-view">
             <header class="top-bar">
-                 <div class="top-bar-left">
+                <div class="top-bar-left">
                     <a href="perfil.html" class="user-profile">
                         <img id="top-bar-profile-pic" src="assets/images/profile.jpg" alt="Foto de Perfil">
                         <span id="top-bar-username">Frey</span>
                     </a>
                 </div>
                 <div class="top-bar-right">
-                    <button id="delete-playlist-btn" class="delete-playlist-btn">Deletar</button>
                     <a href="index.html" class="nav-icon" title="Início"><i class="fas fa-home"></i></a>
                     <a href="favoritos.html" class="nav-icon" title="Favoritos"><i class="fas fa-heart"></i></a>
-                    <a href="seguindo.html" class="nav-icon" title="Player"><i class="fas fa-play"></i></a>
+                    <a href="seguindo.html" class="nav-icon" title="Seguindo"><i class="fas fa-users"></i></a> <a
+                        href="login.html" class="nav-icon" title="Sair/Login"><i class="fas fa-door-open"></i></a>
                 </div>
             </header>
 
             <main class="main-content">
                 <header class="playlist-header-editable">
                     <label for="playlist-cover-upload" class="playlist-cover-container">
-                        <img id="playlist-cover-img" src="assets/images/covers/placeholder_playlist.png" alt="Capa da Playlist" class="playlist-cover-large">
+                        <img id="playlist-cover-img" src="assets/images/covers/placeholder_playlist.png"
+                            alt="Capa da Playlist" class="playlist-cover-large">
                         <div class="edit-icon"><i class="fas fa-pencil-alt"></i></div>
                         <input type="file" id="playlist-cover-upload" accept="image/*" style="display: none;">
                     </label>
                     <div class="playlist-info-editable">
                         <p>Playlist</p>
-                        <input type="text" id="playlist-name-input" class="playlist-name-editable" value="Minha playlist">
+                        <input type="text" id="playlist-name-input" class="playlist-name-editable"
+                            value="Minha playlist">
                         <div class="playlist-user-info">
                             <img id="playlist-user-pic" src="assets/images/profile.jpg" alt="Foto do Utilizador">
                             <span id="playlist-user-name">Frey</span>
@@ -107,10 +111,11 @@
             </div>
         </footer>
     </div>
-    
+
     <audio id="audio-player"></audio>
     <script src="data.js"></script>
     <script src="player.js"></script>
     <script src="criar_playlist.js"></script>
 </body>
+
 </html>

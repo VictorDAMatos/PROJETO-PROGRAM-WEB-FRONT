@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SONORA - Perfil</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
     <div class="app-wrapper">
         <aside class="sidebar">
@@ -31,14 +33,16 @@
                 <div class="top-bar-right">
                     <a href="index.html" class="nav-icon" title="Início"><i class="fas fa-home"></i></a>
                     <a href="favoritos.html" class="nav-icon" title="Favoritos"><i class="fas fa-heart"></i></a>
-                    <a href="seguindo.html" class="nav-icon" title="Player"><i class="fas fa-play"></i></a>
+                    <a href="seguindo.html" class="nav-icon" title="Seguindo"><i class="fas fa-users"></i></a> <a
+                        href="login.html" class="nav-icon" title="Sair/Login"><i class="fas fa-door-open"></i></a>
                 </div>
             </header>
 
             <main class="main-content">
                 <header class="profile-header-vertical">
                     <label for="profile-pic-upload" class="profile-picture-container">
-                        <img id="profile-picture-large" src="assets/images/profile.jpg" alt="Foto de Perfil Grande" class="profile-picture-large">
+                        <img id="profile-picture-large" src="assets/images/profile.jpg" alt="Foto de Perfil Grande"
+                            class="profile-picture-large">
                         <div class="edit-icon"><i class="fas fa-pencil-alt"></i></div>
                         <input type="file" id="profile-pic-upload" accept="image/*" style="display: none;">
                     </label>
@@ -92,10 +96,11 @@
             </div>
         </footer>
     </div>
-    
+
     <audio id="audio-player"></audio>
     <script src="data.js"></script>
     <script src="player.js"></script>
     <script src="perfil.js"></script>
 </body>
+
 </html>
